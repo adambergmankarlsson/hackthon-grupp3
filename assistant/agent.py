@@ -1,16 +1,22 @@
-"""A minimal Google ADK (1.x) agent — boilerplate to build on.
+"""Forefront "Executive Research Agent" — Google ADK (1.x).
 
-The only thing ADK requires from this module is a module-level `root_agent`.
-This starter uses ADK's built-in `google_search` tool so the agent can ground
-its answers with live web results.
+Combines internal Forefront knowledge (the Workvivo feed) with live web research to
+generate newsletter material. Tools live in the `tools/` package; this module only
+wires them onto the root agent.
 """
 
 from google.adk.agents import Agent
-from google.adk.tools import google_search
+from google.adk.tools.agent_tool import AgentTool
+
+from .tools import build_search_agent, fetch_workvivo_post, load_workvivo_catalog
+
+MODEL = "gemini-2.5-flash"
+
+search_agent = build_search_agent(MODEL)
 
 root_agent = Agent(
     name="assistant",
-    model="gemini-2.5-flash",
+    model=MODEL,
     description="Executive Research Agent for Forefront — generates newsletter material.",
     instruction=(
         'Du är en "Executive Research Agent" för Forefront. '
@@ -22,7 +28,13 @@ root_agent = Agent(
         "3. Aktuella teknikskiften och marknadstrender.\n\n"
         "Analysera alltid informationen ur ett rådgivande perspektiv: "
         '"Vad innebär detta för läsaren idag?" och '
-        '"Vilken åtgärd bör de överväga?".'
+        '"Vilken åtgärd bör de överväga?".\n\n'
+        "VERKTYG:\n"
+        "- Använd `fetch_workvivo_post` för att hämta Forefronts interna "
+        "Workvivo-flöde (vår expertis och våra affärshändelser). Välj rätt "
+        "space_id utifrån katalogen nedan.\n"
+        "- Använd `search_agent` för aktuella nyheter, trender och fakta från webben.\n\n"
+        "=== WORKVIVO-KATALOG ===\n" + load_workvivo_catalog()
     ),
-    tools=[google_search],
+    tools=[fetch_workvivo_post, AgentTool(agent=search_agent)],
 )
