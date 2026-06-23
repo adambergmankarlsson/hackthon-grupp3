@@ -1,11 +1,8 @@
 # Workvivo Feed Catalog (Forefront)
 
-This catalog indexes the internal Workvivo feed exports available to the agent.
-Each entry is one **space** (a Workvivo channel). Use the `space_id` with the
-`fetch_workvivo_post` tool to retrieve the full text of that space's posts.
-
-> Mockup note: this is a static export of real Workvivo content (as of June 2026),
-> standing in for a future live Workvivo API integration.
+This catalog indexes Forefront's internal Workvivo feed. Each entry is one
+**space** (a Workvivo channel). Use the `space_id` with the `fetch_workvivo_post`
+tool to retrieve the latest posts from that space.
 
 ---
 

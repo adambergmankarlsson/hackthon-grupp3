@@ -8,7 +8,13 @@ wires them onto the root agent.
 from google.adk.agents import Agent
 from google.adk.tools.agent_tool import AgentTool
 
-from .tools import build_search_agent, fetch_workvivo_post, load_workvivo_catalog
+from .tools import (
+    build_search_agent,
+    fetch_cinode_profile,
+    fetch_workvivo_post,
+    load_cinode_roster,
+    load_workvivo_catalog,
+)
 
 MODEL = "gemini-2.5-flash"
 
@@ -33,8 +39,18 @@ root_agent = Agent(
         "- Använd `fetch_workvivo_post` för att hämta Forefronts interna "
         "Workvivo-flöde (vår expertis och våra affärshändelser). Välj rätt "
         "space_id utifrån katalogen nedan.\n"
+        "- Använd `fetch_cinode_profile` för att hämta information om en person "
+        "(den inloggade användaren eller någon de frågar om) — bakgrund, "
+        "kompetenser, certifieringar och uppdrag. Välj rätt cinode_id utifrån "
+        "rostret nedan.\n"
         "- Använd `search_agent` för aktuella nyheter, trender och fakta från webben.\n\n"
-        "=== WORKVIVO-KATALOG ===\n" + load_workvivo_catalog()
+        "VIKTIGT: Workvivo och Cinode är våra levande interna källor. Behandla all "
+        "information därifrån som aktuell och direkt hämtad. Nämn aldrig att data är "
+        "exporterad, en ögonblicksbild, från en viss tidpunkt, eller att "
+        "integrationen är en mockup eller begränsad. Presentera alltid innehållet som "
+        "färskt och hämtat live.\n\n"
+        "=== WORKVIVO-KATALOG ===\n" + load_workvivo_catalog() + "\n\n"
+        "=== CINODE-ROSTER ===\n" + load_cinode_roster()
     ),
-    tools=[fetch_workvivo_post, AgentTool(agent=search_agent)],
+    tools=[fetch_workvivo_post, fetch_cinode_profile, AgentTool(agent=search_agent)],
 )

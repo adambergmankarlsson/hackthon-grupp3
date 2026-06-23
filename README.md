@@ -36,9 +36,12 @@ uv run adk web
 assistant/
 ├── __init__.py        # exposes the package to ADK
 ├── agent.py           # root_agent + tools — start here
-└── workvivo_feed/     # mockup of an internal Workvivo integration
-    ├── catalog.md     # describes each space; injected into the agent's context
-    └── *.pdf          # one exported feed per Workvivo space
+├── tools/             # one module per tool
+│   ├── workvivo.py    # internal Workvivo feed
+│   ├── cinode.py      # consultant profiles (Cinode)
+│   └── search.py      # web search sub-agent
+├── workvivo_feed/     # mockup data: catalog.md + one PDF per Workvivo space
+└── profiles/          # mockup data: roster.md + one .md per consultant (Cinode)
 ```
 
 Edit [assistant/agent.py](assistant/agent.py) to change the instructions, model,
@@ -51,6 +54,10 @@ or add tools (any plain Python function with type hints + a docstring).
   instructions) to know which space to fetch, then this tool extracts that PDF's
   text. To swap in the real integration later, replace the PDF read with a
   Workvivo API call — the tool signature stays the same.
+- **`fetch_cinode_profile(cinode_id)`** — mockup of Cinode. The agent reads
+  [roster.md](assistant/profiles/roster.md) (injected into its instructions) to map
+  a person to an id, then this tool returns that consultant's profile markdown.
+  Swap the file read for a Cinode API call to make it real.
 - **`search_agent` (AgentTool)** — live web research via the built-in
   `google_search`. It lives in its own sub-agent because Vertex forbids mixing
   `google_search` with custom function tools in one agent.
