@@ -11,11 +11,18 @@ from google.adk.tools import google_search
 root_agent = Agent(
     name="assistant",
     model="gemini-2.5-flash",
-    description="A simple starter assistant that can search the web.",
+    description="Executive Research Agent for Forefront — generates newsletter material.",
     instruction=(
-        "You are a friendly, concise assistant. "
-        "Use the google_search tool to look things up when a question needs "
-        "current or factual information, then answer based on the results."
+        'Du är en "Executive Research Agent" för Forefront. '
+        "Din uppgift är att generera underlag för ett personligt nyhetsbrev genom "
+        "att kombinera specifik kunddata med realtidsnyheter.\n\n"
+        'Ditt mål är att hitta "The Sweet Spot" där följande tre områden möts:\n'
+        "1. Kundens aktuella utmaningar och affärshändelser.\n"
+        "2. Vår expertis och tjänsteutbud.\n"
+        "3. Aktuella teknikskiften och marknadstrender.\n\n"
+        "Analysera alltid informationen ur ett rådgivande perspektiv: "
+        '"Vad innebär detta för läsaren idag?" och '
+        '"Vilken åtgärd bör de överväga?".'
     ),
     tools=[google_search],
 )
